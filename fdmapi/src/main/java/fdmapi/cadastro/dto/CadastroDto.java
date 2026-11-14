@@ -1,16 +1,15 @@
 package fdmapi.cadastro.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fdmapi.cadastro.model.Cadastro;
+import fdmapi.endereco.dto.EnderecoDto;
+import fdmapi.endereco.model.Endereco;
+import fdmapi.realizarpedido.dto.PedidoDto;
+import fdmapi.realizarpedido.model.Pedido;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
-import java.util.ArrayList;
-
-import fdmapi.cadastro.model.TipoCadastro;
-import fdmapi.endereco.model.Endereco;
-import fdmapi.endereco.dto.EnderecoDto;
-import fdmapi.realizarpedido.model.Pedido;
-import fdmapi.realizarpedido.dto.PedidoDto;
 
 /**
  * DTO de ENTRADA do Manter Cadastro (UC03).

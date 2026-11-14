@@ -5,14 +5,12 @@ import java.util.List;
 
 import fdmapi.categoria.model.Categoria;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -43,7 +41,7 @@ public class Produto {
     @JoinColumn(name = "produto_id")
     private final List<Sku> skus = new ArrayList<>();
 
-    @OneToOne
+    @OneToMany
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
