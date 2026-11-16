@@ -4,7 +4,6 @@ package fdmapi.produto.dto;
 import java.math.BigDecimal;
 import java.util.Map;
 
-/* FossaDasMarinanas fdmapi import */
 import fdmapi.produto.model.Sku;
 
 /**
@@ -24,10 +23,14 @@ public record SkuDto(Long id, Integer estoque, BigDecimal preco,
     String codigoUniversal, Integer alturaCm, Integer larguraCm, 
     Integer comprimentoCm) {
 
-  public static SkuDto from (Sku s) {    
-    return new SkuDto(s.getId(), s.getEstoque(), s.getPreco(),
-        s.getEspecificacoes(), s.getPesoGramas(), 
-        s.getCodigoUniversal(), s.getAlturaCm(), s.getLarguraCm(), 
-        s.getComprimentoCm());
+  public static SkuDto from(Sku sku) {
+    if (sku == null) {
+      return null; // estou tendo um bug que acontece quando deleto um sku e ele está no carrinho de alguém, tentando resolver
+    }
+
+    return new SkuDto(sku.getId(), sku.getEstoque(), sku.getPreco(),
+        sku.getEspecificacoes(), sku.getPesoGramas(), 
+        sku.getCodigoUniversal(), sku.getAlturaCm(), sku.getLarguraCm(), 
+        sku.getComprimentoCm());
   }
 }

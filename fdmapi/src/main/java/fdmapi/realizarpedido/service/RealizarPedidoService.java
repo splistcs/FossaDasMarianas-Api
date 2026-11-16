@@ -1,35 +1,25 @@
 package fdmapi.realizarpedido.service;
 
 /* Java import */
-import java.util.Optional;
-import java.util.List;
-import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
-/* Spring import*/
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/* FossaDasMarinanas fdmapi import */
-import fdmapi.realizarpedido.model.Pedido;
-import fdmapi.realizarpedido.model.Item;
-import fdmapi.realizarpedido.model.StatusPedido;
-import fdmapi.realizarpedido.dto.PedidoDto;
+import fdmapi.cadastro.model.Cadastro;
+import fdmapi.cadastro.service.CadastroService;
+import fdmapi.produto.model.Sku;
+import fdmapi.produto.service.SkuService;
 import fdmapi.realizarpedido.dto.ItemDto;
+import fdmapi.realizarpedido.dto.PedidoDto;
+import fdmapi.realizarpedido.model.Item;
+import fdmapi.realizarpedido.model.Pedido;
+import fdmapi.realizarpedido.model.StatusPedido;
 import fdmapi.realizarpedido.repository.ItemRepository;
 import fdmapi.realizarpedido.repository.PedidoRepository;
-import fdmapi.realizarpedido.service.AcquireMockService;
-import fdmapi.realizarpedido.dto.AcquireMockWebhookDto;
-
-import fdmapi.cadastro.model.Cadastro;
-import fdmapi.cadastro.dto.CadastroDto;
-import fdmapi.endereco.dto.EnderecoDto;
-import fdmapi.cadastro.service.CadastroService;
-
-import fdmapi.produto.model.Sku;
-import fdmapi.produto.dto.SkuDto;
-import fdmapi.produto.service.SkuService;
 
 /**
  * RealizarPedidoService
@@ -169,7 +159,7 @@ public class RealizarPedidoService {
 	}
 
   /* OK */
-  public PedidoDto getCarrinho(Long id) throws Exception {
+  public PedidoDto getCarrinho(Long id) throws Exception { // Alterei a função pois estava crashando o carrinho quando um sku fosse removido, agora, deve resolver. @splistcs
     if(id == null || id < 0) {
       throw new Exception("E1");
     }
@@ -195,10 +185,32 @@ public class RealizarPedidoService {
 
       cadastro.getPedidos().add(carrinho);
       cadastro = cadastroService.save(cadastro);
+    } else if (carrinho.getItemPedido() != null && !carrinho.getItemPedido().isEmpty()) {
+      List<Item> itensInvalidos = new ArrayList<>();
+
+      for (Item item : carrinho.getItemPedido()) {
+        // Verifica se o item está sem SKU ou se o ID do SKU não existe mais no banco
+        if (item == null || item.getSku() == null || item.getSku().getId() == null 
+            || skuService.findById(item.getSku().getId()).isEmpty()) {
+          itensInvalidos.add(item);
+        }
+      }
+
+      if (!itensInvalidos.isEmpty()) {
+        carrinho.getItemPedido().removeAll(itensInvalidos);
+        pedidoRepository.save(carrinho);
+        
+        // Apaga os itens corrompidos da tabela 'item' para não deixar lixo no banco
+        for (Item invalido : itensInvalidos) {
+          if (invalido != null && invalido.getId() != null) {
+            itemRepository.deleteById(invalido.getId());
+          }
+        }
+      }
     }
 
     return PedidoDto.from(carrinho);
-	}
+  }
 
   /* OK */
   @Transactional(readOnly = true)
