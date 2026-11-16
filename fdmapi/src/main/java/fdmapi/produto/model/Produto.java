@@ -3,6 +3,7 @@ package fdmapi.produto.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.FetchType;
 import fdmapi.categoria.model.Categoria;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -39,7 +40,7 @@ public class Produto {
 
     private String imagemPrincipalUrl;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "produto_id")
     private final List<Sku> skus = new ArrayList<>();
 
