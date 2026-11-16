@@ -100,7 +100,7 @@ public class ProdutoCtrl {
 
 		try {
 			Produto produto = new Produto();
-      /*
+      
 			produto.setNome(produtoDto.nome());
 			produto.setDescricao(produtoDto.descricao());
 			produto.setMaterial(produtoDto.material());
@@ -109,7 +109,6 @@ public class ProdutoCtrl {
 			produto.setImagemPrincipalUrl(produtoDto.imagemPrincipalUrl());
 			produto.setSkus(produtoDto.skus());
 			produto.setCategoria(produtoDto.categoria());
-      */
 
 			Produto produtoSalvo = produtoService.save(produto);
 

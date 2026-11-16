@@ -2,24 +2,15 @@ package fdmapi.realizarpedido.model;
 
 /* Java import */
 import java.math.BigDecimal;
-import java.util.Map;
 
-/* JPA import */
-import jakarta.persistence.CollectionTable;
+import fdmapi.produto.model.Sku;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
-
-/* FossaDasMarinanas fdmapi import */
-import fdmapi.produto.model.Sku;
-
-/* Misc. import */
-import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,7 +43,7 @@ public class Item {
   @Column(name = "preco_final")
   private BigDecimal precoFinal;
 
-  @ManyToOne
-  @JoinColumn(name = "sku_id")
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "sku_id", nullable = false) // coloquei o nullable = false para evitar de bugar quando um item for removido e ele estiver no carrinho de alguém.
   private Sku sku;
 }
